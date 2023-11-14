@@ -27,6 +27,13 @@ curl -d "client_id=94a2981b-fcac-4814-a1b0-039d043e70fd&scope=Tasks.ReadWrite%20
 
 ## 运行应用
 
+克隆本项目，切换目录。
+
+```bash
+git clone https://github.com/xzcxzcyy/SJTU-CS-Seminar.git
+cd SJTU-CS-Seminar/
+```
+
 将上一步保存的refresh_token（注意不是最开始的code）填入config.json文件内。同时可以修改里面的各项设置，每项设置的意义如下：
 
 -  "refresh_token": 用于访问你的账户的授权，**将上一步的refresh_token填在这里**
@@ -37,9 +44,6 @@ curl -d "client_id=94a2981b-fcac-4814-a1b0-039d043e70fd&scope=Tasks.ReadWrite%20
 接下来，运行以下命令：
 
 ```bash
-git clone https://github.com/xzcxzcyy/SJTU-CS-Seminar.git
-cd SJTU-CS-Seminar/
-
 docker-compose build
 docker-compose up --detach
 
