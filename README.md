@@ -37,6 +37,9 @@ curl -d "client_id=94a2981b-fcac-4814-a1b0-039d043e70fd&scope=Tasks.ReadWrite%20
 接下来，运行以下命令：
 
 ```bash
+git clone https://github.com/xzcxzcyy/SJTU-CS-Seminar.git
+cd SJTU-CS-Seminar/
+
 docker-compose build
 docker-compose up --detach
 
