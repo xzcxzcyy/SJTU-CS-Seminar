@@ -17,7 +17,7 @@ https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=94a2
 对本应用（seminar-notify）授权后，观察地址栏：
 ![地址栏示例](docs/authorize_example.png)
 
-将code参数的值复制下来，然后执行一下命令：
+将code参数的值复制下来，然后执行以下命令：
 
 ```bash
 curl -d "client_id=94a2981b-fcac-4814-a1b0-039d043e70fd&scope=Tasks.ReadWrite%20User.Read%20offline_access&redirect_uri=https%3A%2F%2Flogin.microsoftonline.com%2Fcommon%2Foauth2%2Fnativeclient&grant_type=authorization_code&code=【上一步复制的code】" https://login.microsoftonline.com/consumers/oauth2/v2.0/token
@@ -39,6 +39,9 @@ curl -d "client_id=94a2981b-fcac-4814-a1b0-039d043e70fd&scope=Tasks.ReadWrite%20
 ```bash
 docker-compose build
 docker-compose up --detach
+
+# docker服务启动需要一定时间。尽量等待30秒左右再执行下一步
+
 curl -X POST 127.0.0.1:8000/start_timer #这一步用来启动定时器，周期性自动获取讲座
 ```
 
