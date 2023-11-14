@@ -1,0 +1,10 @@
+services:
+  chrome-standalone:
+    image: selenium/standalone-chrome
+    ports:
+      - "4444:4444"
+
+  seminar-notify:
+    build: .
+    ports:
+      - "8000:5000"

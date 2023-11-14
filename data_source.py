@@ -7,15 +7,24 @@ import requests
 import io
 from PIL import Image
 import os
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(options=chrome_options)
+driver = None
+
+def init_driver_if_need():
+  global driver
+  if driver is not None:
+     return
+  chrome_options = Options()
+  chrome_options.add_argument("--headless")
+  driver = webdriver.Remote("http://chrome-standalone:4444/wd/hub", DesiredCapabilities.CHROME, options=chrome_options)
 
 CS_BASE_URL = "https://cs.sjtu.edu.cn/NewNotice.aspx"
 IMG_STORE_DIR = "img"
 
 def update_data(current: set):
+  init_driver_if_need()
   os.makedirs(IMG_STORE_DIR, exist_ok=True)
   addition = []
 

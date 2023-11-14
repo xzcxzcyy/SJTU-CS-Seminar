@@ -1,3 +1,5 @@
+import threading
+import time
 from flask import Flask, request, jsonify
 import json
 import ms_todo
@@ -54,6 +56,22 @@ def clear():
   current_seminars.clear()
   return jsonify({"message": "success"})
 
+@app.route("/start_timer", methods=["POST"])
+def start_timer():
+  update_period_min = read_config("update_period_min")
+  if update_period_min is None:
+    return jsonify({"message": "you should set update_period_min"})
+  
+  def run_timer():
+    while True:
+      process_once()
+      time.sleep(update_period_min * 60)
+
+  timer_thread = threading.Thread(target=run_timer)
+  timer_thread.daemon = True
+  timer_thread.start()
+  return jsonify({"message": "success"})
+
 def update_todo(todo_title, img_path):
   config = read_all_config()
   refresh_token = config["refresh_token"]
@@ -77,4 +95,4 @@ def process_once():
   return addition
 
 if __name__ == "__main__":
-  app.run(debug=False, port=7001)
+  app.run(debug=False, port=5000)
