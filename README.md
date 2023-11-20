@@ -44,8 +44,8 @@ cd SJTU-CS-Seminar/
 接下来，运行以下命令：
 
 ```bash
-docker-compose build
-docker-compose up --detach
+docker compose build
+docker compose up --detach
 
 # docker服务启动需要一定时间。尽量等待30秒左右再执行下一步
 

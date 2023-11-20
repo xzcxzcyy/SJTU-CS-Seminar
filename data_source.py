@@ -10,24 +10,20 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-driver = None
-
-def init_driver_if_need():
-  global driver
-  if driver is not None:
-     return
+def get_driver():
   chrome_options = Options()
   chrome_options.add_argument("--headless")
   driver = webdriver.Remote("http://chrome-standalone:4444/wd/hub", DesiredCapabilities.CHROME, options=chrome_options)
+  return driver
 
 CS_BASE_URL = "https://cs.sjtu.edu.cn/NewNotice.aspx"
 IMG_STORE_DIR = "img"
 
 def update_data(current: set):
-  init_driver_if_need()
   os.makedirs(IMG_STORE_DIR, exist_ok=True)
   addition = []
 
+  driver = get_driver()
   # 进入指定网页
   driver.get(CS_BASE_URL) 
 
@@ -65,6 +61,7 @@ def update_data(current: set):
     # 保存图片
     img.save(filename)
     img.close()
+  driver.quit()
   return addition
 
 def remove_date_prefix(input_string):
