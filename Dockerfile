@@ -4,6 +4,8 @@ FROM python:3.11.5-slim as base
 FROM base as builder
 
 COPY requirements.txt /requirements.txt
+RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple 
+RUN pip config set install.trusted-host mirrors.aliyun.com
 RUN pip install --upgrade --no-cache-dir -r /requirements.txt
 RUN rm /requirements.txt
 
