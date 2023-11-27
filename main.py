@@ -3,8 +3,8 @@ import time
 from flask import Flask, request, jsonify
 import json
 import ms_todo
-import data_source
-from data_source import IMG_STORE_DIR
+import data_source_bs
+from data_source_bs import IMG_STORE_DIR
 
 app = Flask(__name__)
 
@@ -32,10 +32,10 @@ def write_config(key, value):
 
 @app.route("/update_seminars", methods=["POST"])
 def update_seminars():
-  addition = process_once()
+  result = process_once()
   ret = {
     "message": "success",
-    "addition": addition
+    "result": result
   }
   return jsonify(ret)
 
@@ -81,18 +81,16 @@ def update_todo(todo_title, img_path):
   write_config("refresh_token", new_refresh)
   ms_todo.check_or_create_todo_item(access_token, list_name, todo_title, img_path)
 
-current_seminars = set()
-
 def process_once():
   """Get seminars and update ToDo List.
   return new found seminars
   """
-  addition = data_source.update_data(current_seminars)
+  addition = data_source_bs.update_data()
   for full_title in addition:
-    title = data_source.remove_date_prefix(full_title)
+    title = data_source_bs.remove_date_prefix(full_title)
     img_path = f"{IMG_STORE_DIR}/{full_title}.jpg"
     update_todo(title, img_path)
   return addition
 
 if __name__ == "__main__":
-  app.run(debug=False, port=5000)
+  app.run(debug=False, port=5000, host="0.0.0.0")

@@ -9,6 +9,7 @@ from PIL import Image
 import os
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import re
 
 def get_driver():
   chrome_options = Options()
@@ -64,10 +65,9 @@ def update_data(current: set):
   driver.quit()
   return addition
 
-def remove_date_prefix(input_string):
-    # 使用split函数将字符串分割成日期和标题两部分，然后取第二部分作为结果
-    parts = input_string.split(' ', 1)
-    if len(parts) > 1:
-        return parts[1]
-    else:
-        return input_string  # 如果没有空格分隔符，返回原始字符串
+def remove_date_prefix(title):
+  # 正则表达式匹配形如 YYYY-MM-DD 的日期，并考虑其后可能存在的空白字符
+  pattern = r'\d{4}-\d{2}-\d{2}\s*'
+  # 使用正则表达式替换功能，将匹配到的日期替换为空字符串
+  cleaned_title = re.sub(pattern, '', title)
+  return cleaned_title.strip()
