@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, request, jsonify
 import json
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -62,7 +63,7 @@ def start_timer():
     return jsonify({"message": "you should set update_period_min"})
   
   scheduler.remove_all_jobs()
-  scheduler.add_job(process_once, "interval", minutes=update_period_min)
+  scheduler.add_job(process_once, "interval", minutes=update_period_min, next_run_time=datetime.datetime.now())
 
   return jsonify({"message": "success"})
 
@@ -85,6 +86,7 @@ def process_once():
   return new found seminars
   """
   addition = data_source_bs.update_data()
+  print(f"process_once get seminar list: {addition}")
   for full_title in addition:
     title = data_source_bs.remove_date_prefix(full_title)
     img_path = f"{IMG_STORE_DIR}/{full_title}.jpg"
