@@ -66,6 +66,16 @@ POST /start_timer
 curl -X POST http://127.0.0.1:8000/start_timer
 ```
 
+### stop_timer
+
+停止已有的定时任务。
+
+POST /stop_timer
+
+```bash
+curl -X POST http://127.0.0.1:8000/stop_timer
+```
+
 ### update_seminars
 
 进行一次手动更新，并将结果推送到ToDo APP
@@ -98,12 +108,30 @@ POST /set_config
 curl -X POST -H "Content-Type: application/json" -d @config.json http://127.0.0.1:8000/set_config
 ```
 
-### clear
+## 问题排查
 
-清除缓存。**当应用出现问题时，应首先考虑调用此接口，或者直接使用docker-compose重启服务**
-
-POST /clear
+查看运行日志：
 
 ```bash
-curl -X POST http://127.0.0.1:8000/clear
+docker compose logs seminar-notify
+```
+
+如果你怀疑是老版本导致的问题，一般情况下，可以拉取更新后重新制作镜像：
+
+```bash
+# 暂存你对配置的修改
+git add config.json
+git stash
+
+# 更新存储库
+git pull
+
+# 恢复你的config
+git stash apply
+git stash clear
+
+# 重新构建和运行容器
+docker compose down
+docker compose build
+docker compose up --detach
 ```

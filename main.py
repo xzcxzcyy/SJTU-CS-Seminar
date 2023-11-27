@@ -1,12 +1,16 @@
-import threading
-import time
 from flask import Flask, request, jsonify
 import json
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+
 import ms_todo
 import data_source_bs
 from data_source_bs import IMG_STORE_DIR
 
 app = Flask(__name__)
+scheduler = BackgroundScheduler(daemon=True)
+scheduler.start()
+atexit.register(lambda: scheduler.shutdown())
 
 CONFIG_FILE = "config.json"
 
@@ -51,25 +55,20 @@ def set_config():
     write_config(key, value)
   return jsonify({"message": "success"})
 
-@app.route("/clear", methods=["POST"])
-def clear():
-  current_seminars.clear()
-  return jsonify({"message": "success"})
-
 @app.route("/start_timer", methods=["POST"])
 def start_timer():
   update_period_min = read_config("update_period_min")
   if update_period_min is None:
     return jsonify({"message": "you should set update_period_min"})
   
-  def run_timer():
-    while True:
-      process_once()
-      time.sleep(update_period_min * 60)
+  scheduler.remove_all_jobs()
+  scheduler.add_job(process_once, "interval", minutes=update_period_min)
 
-  timer_thread = threading.Thread(target=run_timer)
-  timer_thread.daemon = True
-  timer_thread.start()
+  return jsonify({"message": "success"})
+
+@app.route("/stop_timer", methods=["POST"])
+def stop_timer():
+  scheduler.remove_all_jobs()
   return jsonify({"message": "success"})
 
 def update_todo(todo_title, img_path):
