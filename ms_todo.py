@@ -80,7 +80,7 @@ def check_or_create_todo_item(access_token, list_name, todo_title, image_path):
   # 检查待办项是否存在
   check_item_url = f"https://graph.microsoft.com/v1.0/me/todo/lists/{list_id}/tasks?$filter=title eq '{todo_title}'"
   response = requests.get(check_item_url, headers=headers)
-  tasks = response.json()["value"]
+  tasks = response.json().get("value")
   if tasks:
     print(f"待办项 '{todo_title}' 已经存在")
     return
